@@ -3,8 +3,8 @@
     <slot name="activator" :on="on"></slot>
     <div :class="{'show d-block modal-open': showModal}" class="modal fade" role="dialog">
       <div class="modal-dialog modal-dialog-centered"
-           :class="'modal-'+size"
-           role="document">
+            :class="'modal-'+size"
+            role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalCenterTitle">
@@ -15,15 +15,12 @@
             </button>
           </div>
           <div class="modal-body">
-
             <slot #default></slot>
-            <p>This alert will dismiss after {{ duration }} seconds...</p>
-            
+            <p>Alert will close after {{ duration }} sec</p>
           </div>
           <div class="modal-footer">
             <slot name="footer" :close="close">
-              <button type="button" class="btn btn-secondary" data-dismiss="alert" @click="close">Dismiss</button>
-
+              <button type="button" class="btn btn-secondary" data-dismiss="alert" @click="close">Close</button>
             </slot>
           </div>
         </div>
@@ -69,8 +66,6 @@
     data(){
       return {
           showModal: this.visible,
-          dismissSecs: 10,
-          dismissCountDown: 0,
           showDismissibleAlert: false
       }
     },
@@ -78,9 +73,7 @@
       visible: function (newValue, oldValue) {
         if (!oldValue) {
           this.$emit("modal:opened")
-            setTimeout(() => {
-            this.visible = false 
-            },parseInt(this.duration)*1000)
+            setTimeout(() => {this.close()},parseInt(this.duration)*1000)
         }
         if (oldValue) {
           this.$emit("modal:closed")
@@ -99,11 +92,13 @@
       },
       on() {
         this.$emit("change", true)
+        setTimeout(() => {this.close()},parseInt(this.duration)*1000)
         this.showModal = true;
       },
     }
   }
 </script>
+
 
 <style scoped>
   .modal-dialog {
